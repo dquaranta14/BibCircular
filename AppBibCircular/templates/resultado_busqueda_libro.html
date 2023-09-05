@@ -1,0 +1,16 @@
+{% extends 'padre.html' %}
+
+{% block contenidoQueCambia %}
+    <h1>Resultado de búsqueda</h1>
+
+    <ul>
+        
+        {% for libro in libros %}
+            <li>
+                {{libro.nombre}} - {{libro.autor}} - {{libro.categoria}}
+            </li>
+        {% endfor %}
+          
+    </ul>
+
+{% endblock contenidoQueCambia %}

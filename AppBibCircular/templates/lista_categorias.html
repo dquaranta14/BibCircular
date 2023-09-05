@@ -1,0 +1,16 @@
+{% extends 'padre.html' %}
+
+{% block contenidoQueCambia %}
+    <h1>Lista de Categorias</h1>
+
+    <ul>
+        
+        {% for categoria in lista_categorias %}
+            <li>{{categoria.nombre}}</li>
+        {% endfor %}
+    
+    </ul>
+
+    <button><a href="{% url 'CategoriaFormulario' %}">Nueva Categoria</a></button>
+
+{% endblock contenidoQueCambia %}

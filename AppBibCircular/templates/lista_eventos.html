@@ -1,0 +1,16 @@
+{% extends 'padre.html' %}
+
+{% block contenidoQueCambia %}
+    <h1>Lista de Eventos</h1>
+
+    <ul>
+        
+        {% for evento in lista_eventos %}
+            <li>{{evento.nombre}} Fecha: {{evento.fecha}} Horario: {{evento.horario}}</li>
+        {% endfor %}
+    
+    </ul>
+
+    <button><a href="{% url 'EventoFormulario' %}">Nuevo Evento</a></button>
+
+{% endblock contenidoQueCambia %}

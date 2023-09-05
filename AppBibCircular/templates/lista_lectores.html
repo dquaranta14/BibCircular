@@ -1,0 +1,22 @@
+{% extends 'padre.html' %}
+
+{% block contenidoQueCambia %}
+
+    <form action="{% url 'BuscarLector' %}" method="get">
+
+        <p>Titulo: <input type="text" name="lector"> <button type="submit">Buscar</button></p>
+    </form>
+
+    <h1>Lista de Lectores</h1>
+
+    <ul>
+        
+        {% for lector in lista_lectores %}
+            <li>{{lector.nombre}} {{lector.apellido}}</li>
+        {% endfor %}
+    
+    </ul>
+
+    <button><a href="{% url 'LectorFormulario' %}">Nuevo Lector</a></button>
+
+{% endblock contenidoQueCambia %}
