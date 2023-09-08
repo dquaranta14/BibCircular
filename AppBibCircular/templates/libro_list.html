@@ -1,0 +1,33 @@
+{% extends 'padre.html' %}
+
+{% block contenidoQueCambia %}
+    
+    <form action="{% url 'BuscarLibro' %}" method="get">
+
+        <p>Titulo: <input type="text" name="titulo"> <button type="submit">Buscar</button></p>
+    </form>
+
+    <h1>Lista de Libros</h1>
+
+    <ul>
+            
+        {% for libro in libros %}
+            <li>
+                <a href="{% url 'DetalleLibros' libro.id %}">{{libro}}</a>
+            </li>
+
+            <div>
+                <button>
+                    <a href="{% url 'EliminaLibros' libro.id %}">Eliminar</a>
+                </button>
+                <button>
+                    <a href="{% url 'ActualizaLibros' libro.id %}">Editar</a>
+                </button>
+            </div>
+            
+        {% endfor %}
+
+    </ul>
+    <a href="{% url 'CreaLibros' %}">Crear Libro</a>
+
+{% endblock contenidoQueCambia %}

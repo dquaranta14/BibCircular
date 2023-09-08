@@ -1,16 +1,16 @@
 from django import forms
+from .models import Libro
 
 class CategoriaFormulario(forms.Form):
 
     nombre = forms.CharField(max_length=50, required=True)
 
-class LibroFormulario(forms.Form):
+class LibroFormulario(forms.ModelForm):
 
-    nombre = forms.CharField(required=True)
-    autor = forms.CharField(required=True)
-    #categoria = forms.CharField(required=False)
-    resena = forms.CharField(required=False)
-    precio = forms.FloatField(required=False)
+    class Meta:
+        model=Libro
+        fields=('__all__')
+
 
 class LectorFormulario(forms.Form):
 

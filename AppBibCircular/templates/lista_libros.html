@@ -13,6 +13,16 @@
         
         {% for libro in lista_libros %}
             <li>{{libro.nombre}} - {{libro.categoria}} - $ {{libro.precio}}</li>
+
+            <div>
+                <form action="{% url 'EliminaLibro' libro.id %}" method="post">{% csrf_token %}
+                    <button type="submit">Eliminar</button>
+                </form>
+                <button>
+                    <a href="{% url 'EditarLibro' libro.id %}">Editar</a>
+                </button>
+            </div>
+
         {% endfor %}
     
     </ul>

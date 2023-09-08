@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import DeleteView, UpdateView, CreateView
 from .models import  Categoria, Libro, Lector, Evento, Ventas
 from .forms import CategoriaFormulario, LibroFormulario, LectorFormulario, EventoFormulario
 
@@ -15,11 +18,11 @@ def lista_categorias(req):
 
     return render(req, "lista_categorias.html", {"lista_categorias": lista})
 
-def lista_libros(req):
+""" def lista_libros(req):
 
     lista = Libro.objects.all()
 
-    return render(req, "lista_libros.html", {"lista_libros": lista})
+    return render(req, "lista_libros.html", {"lista_libros": lista}) """
 
 def lista_lectores(req):
 
@@ -58,7 +61,7 @@ def categoria_formulario(req):
 
         return render(req, "categoria_formulario.html", {"miFomulario": miFormulario})
 
-def libro_formulario(req):
+""" def libro_formulario(req):
 
     print('method', req.method)
     print('post', req.POST)
@@ -83,7 +86,34 @@ def libro_formulario(req):
         miFormulario = LibroFormulario()
 
         return render(req, "libro_formulario.html", {"miFomulario": miFormulario})
+ """
+class LibroList(ListView):
+    model = Libro
+    template_name = "libro_list.html"
+    context_object_name = "libros"
 
+
+class LibroDetail(DetailView):
+    model = Libro
+    template_name = "libro_detail.html"
+    context_object_name = "libro"
+
+class LibroCreate(CreateView):
+    model = Libro
+    template_name = "libro_create.html"
+    fields = ["nombre", "autor", "categoria", "resena", "precio"]
+    success_url = "/app-bibcircular/"
+
+class LibroUpdate(UpdateView):
+    model = Libro
+    template_name = "libro_update.html"
+    fields = ("__all__")
+    success_url = "/app-bibcircular/"
+
+class LibroDelete(DeleteView):
+    model = Libro
+    template_name = "libro_delete.html"
+    success_url = "/app-bibcircular/"
 
 def lector_formulario(req):
 
