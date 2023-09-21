@@ -2,7 +2,15 @@
 
 {% block contenidoQueCambia %}
     
-    <h1>Vista en detalle del libro</h1>
-    <h3>Curso {{libro.nombre}}, Autor/a: {{libro.autor}}</h3>
+    {% if libro.imagen %} 
+    <img src="{{libro.imagen.url}}"
+        class="card-img-top" alt='portada'  >
+    {% endif %}
+    <h2>{{libro.nombre}}</h2>
+    <h5>Autor/a: {{libro.autor}}</h5>
+    <h5>Reseña: {{libro.resena}}</h5>
+    <h3>Valor: {{libro.precio}}</h3>
+    
+    <h6>Pertenece a: {{libro.lector}}</h6>
 
 {% endblock contenidoQueCambia %}

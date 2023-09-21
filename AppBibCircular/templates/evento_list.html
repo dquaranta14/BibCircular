@@ -1,0 +1,28 @@
+{% extends 'padre.html' %}
+
+{% block contenidoQueCambia %}
+    
+    <h1>Listado de Eventos</h1>
+
+    <ul>
+            
+        {% for evento in eventos %}
+            <li>
+                <a href="{% url 'DetalleEventos' evento.id %}">{{evento}}</a>
+            </li>
+
+            <div>
+                <button>
+                    <a href="{% url 'EliminaEventos' evento.id %}">Eliminar</a>
+                </button>
+                <button>
+                    <a href="{% url 'ActualizaEventos' evento.id %}">Editar</a>
+                </button>
+            </div>
+            
+        {% endfor %}
+
+    </ul>
+    <a href="{% url 'CreaEventos' %}">Alta Evento</a>
+
+{% endblock contenidoQueCambia %}

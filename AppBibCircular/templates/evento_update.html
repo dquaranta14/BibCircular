@@ -2,7 +2,7 @@
 
 {% block contenidoQueCambia %}
     
-    <form action="{% url 'CreaLibros' %}" enctype="multipart/form-data" method="post">{% csrf_token %}
+    <form action="{% url 'ActualizaEventos' evento.id%}" method="post">{% csrf_token %}
 
         {{form.as_p}}
 

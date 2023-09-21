@@ -2,9 +2,9 @@
 
 {% block contenidoQueCambia %}
     
-    <form action="{% url 'CursoFormulario' %}" method="post">{% csrf_token %}
+    <form action="{% url 'CreaLectores' %}" method="post">{% csrf_token %}
 
-        {{miFomulario.as_p}}
+        {{form.as_p}}
 
         <button type="submit">Enviar</button>
     </form>

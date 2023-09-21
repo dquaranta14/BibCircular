@@ -3,9 +3,15 @@ from django.http import HttpResponse, HttpRequest
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView, UpdateView, CreateView
-from .models import  Categoria, Libro, Lector, Evento, Ventas
-from .forms import CategoriaFormulario, LibroFormulario, LectorFormulario, EventoFormulario
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 
+from .models import  Categoria, Libro, Lector, Evento, Ventas, Comentario
+from .forms import CategoriaFormulario, LibroFormulario, LectorFormulario, EventoFormulario, UserEditForm
+from datetime import date
 
 # Create your views here.
 def inicio(req):
@@ -17,12 +23,6 @@ def lista_categorias(req):
     lista = Categoria.objects.all()
 
     return render(req, "lista_categorias.html", {"lista_categorias": lista})
-
-""" def lista_libros(req):
-
-    lista = Libro.objects.all()
-
-    return render(req, "lista_libros.html", {"lista_libros": lista}) """
 
 def lista_lectores(req):
 
@@ -87,21 +87,40 @@ def categoria_formulario(req):
 
         return render(req, "libro_formulario.html", {"miFomulario": miFormulario})
  """
+# --------------------------------------------------------------
+# ------------    LIBROS   -------------------------------------
+# --------------------------------------------------------------
+def lista_libros(req, start=1):
+
+    cant_por_pagina = 6
+
+    if req.GET.get("direction") == 'next':
+        start += 1
+    elif req.GET.get("direction") == 'before':
+        start -= 1
+
+    inicio = int(start)*cant_por_pagina
+    final = (int(start)+1)*cant_por_pagina
+    lista = Libro.objects.all()[inicio:final]
+
+    return render(req, "lista_libros.html", {"lista_libros": lista, "current_page": start})
+
+
 class LibroList(ListView):
     model = Libro
-    template_name = "libro_list.html"
+    template_name = "lista_libros.html"
     context_object_name = "libros"
-
+    queryset = Libro.objects.order_by("nombre").filter(disponible = True)
 
 class LibroDetail(DetailView):
     model = Libro
     template_name = "libro_detail.html"
     context_object_name = "libro"
 
-class LibroCreate(CreateView):
+class LibroCreate(CreateView):  
     model = Libro
     template_name = "libro_create.html"
-    fields = ["nombre", "autor", "categoria", "resena", "precio"]
+    fields = ("__all__")
     success_url = "/app-bibcircular/"
 
 class LibroUpdate(UpdateView):
@@ -115,55 +134,67 @@ class LibroDelete(DeleteView):
     template_name = "libro_delete.html"
     success_url = "/app-bibcircular/"
 
-def lector_formulario(req):
+# --------------------------------------------------------------
+# ------------    LECTORES   -----------------------------------
+# --------------------------------------------------------------
+class LectorList(LoginRequiredMixin, ListView):
+    model = Lector
+    template_name = "lector_list.html"
+    context_object_name = "lectores"
+    queryset = Lector.objects.order_by("apellido","nombre")
 
-    print('method', req.method)
-    print('post', req.POST)
+class LectorDetail(DetailView):
+    model = Lector
+    template_name = "lector_detail.html"
+    context_object_name = "lector"
 
-    if req.method == 'POST':
+class LectorCreate(CreateView):
+    model = Lector
+    template_name = "lector_create.html"
+    fields = ["nombre", "apellido", "email", "telefono"]
+    success_url = "/app-bibcircular/"
 
-        miFormulario = LectorFormulario(req.POST)
-        
-        if miFormulario.is_valid():
+class LectorUpdate(UpdateView):
+    model = Lector
+    template_name = "lector_update.html"
+    fields = ("__all__")
+    success_url = "/app-bibcircular/"
 
-            print(miFormulario.cleaned_data)
-            data = miFormulario.cleaned_data
+class LectorDelete(DeleteView):
+    model = Lector
+    template_name = "lector_delete.html"
+    success_url = "/app-bibcircular/"
 
-            lector = Lector(nombre=data["nombre"], apellido=data["apellido"], email=data["email"], telefono=data["telefono"])
-            lector.save()
-            return render(req, "inicio.html", {"mensaje": "Lector creado con éxito"})
-        else:
-            return render(req, "inicio.html", {"mensaje": "Formulario inválido"})
-    else:
+# --------------------------------------------------------------
+# ------------    EVENTOS    -----------------------------------
+# --------------------------------------------------------------
+class EventoList(ListView):
+    model = Evento
+    template_name = "evento_list.html"
+    context_object_name = "eventos"
+    queryset = Evento.objects.order_by("fecha")
 
-        miFormulario = LectorFormulario()
+class EventoDetail(DetailView):
+    model = Evento
+    template_name = "evento_detail.html"
+    context_object_name = "evento"
 
-        return render(req, "lector_formulario.html", {"miFomulario": miFormulario})
+class EventoCreate(CreateView):
+    model = Evento
+    template_name = "evento_create.html"
+    fields = ["nombre", "fecha", "horario", "descripcion"]
+    success_url = "/app-bibcircular/"
 
-def evento_formulario(req):
+class EventoUpdate(UpdateView):
+    model = Evento
+    template_name = "evento_update.html"
+    fields = ("__all__")
+    success_url = "/app-bibcircular/"
 
-    print('method', req.method)
-    print('post', req.POST)
-
-    if req.method == 'POST':
-
-        miFormulario = EventoFormulario(req.POST)
-        
-        if miFormulario.is_valid():
-
-            print(miFormulario.cleaned_data)
-            data = miFormulario.cleaned_data
-
-            evento = Evento(nombre=data["nombre"], fecha=data["fecha"], horario=data["horario"], descripcion=data["descripcion"])
-            evento.save()
-            return render(req, "inicio.html", {"mensaje": "Evento creado con éxito"})
-        else:
-            return render(req, "inicio.html", {"mensaje": "Formulario inválido"})
-    else:
-
-        miFormulario = EventoFormulario()
-
-        return render(req, "evento_formulario.html", {"miFomulario": miFormulario})
+class EventoDelete(DeleteView):
+    model = Evento
+    template_name = "evento_delete.html"
+    success_url = "/app-bibcircular/"
 
 
 def busqueda_libro(req):
@@ -194,3 +225,106 @@ def buscar_lector(req):
             return render(req, "resultado_busqueda_lector.html", {"lectores": lectores})
     else:
         return HttpResponse('No escribiste ningun nombre de lector')
+    
+# --------------------------------------------------------------
+# ------------    USUARIOS   -----------------------------------
+# --------------------------------------------------------------
+
+def loginView(req):
+
+    if req.method == 'POST':
+
+        miFormulario = AuthenticationForm(req, data=req.POST)
+
+        if miFormulario.is_valid():
+
+            data = miFormulario.cleaned_data
+            usuario = data["username"]
+            psw = data["password"]
+
+            user = authenticate(username=usuario, password=psw)
+
+            if user:
+                login(req, user)
+                return render(req, "inicio.html", {"mensaje": f"Bienvenido {usuario}"})
+            else:
+                return render(req, "inicio.html", {"mensaje": "Datos incorrectos"})
+
+        else:
+            #return render(req, "inicio.html", {"mensaje": "Formulario inválido"})
+            return render(req, "login.html", {"miFomulario": miFormulario, "mensaje": "Datos invalidos"})
+    else:
+        miFormulario = AuthenticationForm()
+        return render(req, "login.html", {"miFomulario": miFormulario})
+
+def register(req):
+
+    if req.method == 'POST':
+
+        miFormulario = UserCreationForm(req.POST)
+
+        if miFormulario.is_valid():
+
+            data = miFormulario.cleaned_data
+
+            usuario = data["username"]
+
+            miFormulario.save()
+
+            return render(req, "inicio.html", {"mensaje": f"Usuario {usuario} creado con éxito!"})
+
+        else:
+            return render(req, "inicio.html", {"mensaje": "Formulario inválido"})
+
+    else:
+        miFormulario = UserCreationForm()
+        return render(req, "registro.html", {"miFomulario": miFormulario})
+
+def editar_perfil(req):
+
+    usuario = req.user
+
+    if req.method == 'POST':
+
+        miFormulario = UserEditForm(req.POST, instance=req.user)
+        
+        if miFormulario.is_valid():
+
+            data = miFormulario.cleaned_data
+
+            usuario.first_name = data["first_name"]
+            usuario.last_name = data["last_name"]
+            usuario.email = data["email"]
+            usuario.set_password(data["password1"])
+            usuario.save()
+            return render(req, "inicio.html", {"mensaje": "Perfil actualizado con éxito"})
+        else:
+            return render(req, "editarPerfil.html", {"miFomulario": miFormulario})
+    else:
+
+        miFormulario = UserEditForm(instance=req.user)
+
+        return render(req, "editarPerfil.html", {"miFomulario": miFormulario})
+    
+#def agregar_avatar(req):
+
+    if req.method == 'POST':
+
+        miFormulario = AvatarFormulario(req.POST, req.FILES)
+
+        if miFormulario.is_valid():
+
+            data = miFormulario.cleaned_data
+
+            avatar = Avatar(user=req.user, imagen=data["imagen"])
+
+            avatar.save()
+
+            return render(req, "inicio.html", {"mensaje": f"Avatar actualizado con éxito!"})
+
+        else:
+            return render(req, "inicio.html", {"mensaje": "Formulario inválido"})
+
+    else:
+        miFormulario = AvatarFormulario()
+        return render(req, "agregarAvatar.html", {"miFomulario": miFormulario})

@@ -3,14 +3,18 @@
     <div class="container px-5">
         <a class="navbar-brand" href="{% url 'Inicio' %}">Inicio</a>
         <a class="navbar-brand" href="{% url 'ListaCategorias' %}">Categorias</a>
-        <a class="navbar-brand" href="{% url 'ListaLibros' %}">Libros</a>
+        <a class="navbar-brand" href="{% url 'ListaLibros' 0 %}">Libros</a>
         <a class="navbar-brand" href="{% url 'ListaLectores' %}">Lectores</a>
         <a class="navbar-brand" href="{% url 'ListaEventos' %}">Eventos</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="#!">Sign Up</a></li>
-                <li class="nav-item"><a class="nav-link" href="#!">Log In</a></li>
+                {% if user.is_authenticated %}                
+                    <p>Bienvenido {{user.username}}</p>
+                    <a class="btn btn-primary" href="{% url 'Logout' %}">Logout</a>
+                {% else %}
+                    <a class="btn btn-primary" href="{% url 'Login' %}">Login</a>
+                {% endif %}
             </ul>
         </div>
     </div>
