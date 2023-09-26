@@ -4,7 +4,7 @@
     
     <form action="{% url 'BuscarLibro' %}" method="get">
 
-        <p>Titulo: <input type="text" name="titulo"> <button type="submit">Buscar</button></p>
+        <p>Titulo: <input type="text" name="titulo"><button type="submit">Buscar</button></p>
     </form>
 
     <h1>Lista de Libros</h1>
@@ -28,6 +28,9 @@
         {% endfor %}
 
     </ul>
-    <a href="{% url 'CreaLibros' %}">Crear Libro</a>
+
+    {% if user.is_authenticated %}
+        <button> <a href="{% url 'CreaLibros' %}">Crear Libro</a></button>
+    {% endif %}
 
 {% endblock contenidoQueCambia %}

@@ -2,10 +2,12 @@
 
 {% block contenidoQueCambia %}
     
-    <form action="{% url 'ActualizaLibros' libro.id%}" enctype="multipart/form-data" method="post">{% csrf_token %}
+    <form action="{% url 'ComentarioLibros' id %}" method="post">{% csrf_token %}
 
-        {{form.as_p}}
+        <h4>{{nombre}}</h4>
 
+        {{miFormulario.as_p}}
+        
         <button type="submit">Enviar</button>
     </form>
 

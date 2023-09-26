@@ -1,15 +1,19 @@
-{% extends 'padre.html' %}
+ {% extends 'padre.html' %}
 
 {% block contenidoQueCambia %}
     <h1>Resultado de búsqueda</h1>
 
     <ul>
+        {%if libros %}
+            {%for libro in libros %}
+                <li>
+                    <a href="{% url 'DetalleLibros' libro.id %}" >{{libro.nombre}} - {{libro.autor}} - {{libro.categoria}}</a>
+                </li>
+            {% endfor %}
+        {% else %}
+            <h5>{{mensaje}}</h5>
+        {% endif %}
         
-        {% for libro in libros %}
-            <li>
-                {{libro.nombre}} - {{libro.autor}} - {{libro.categoria}}
-            </li>
-        {% endfor %}
           
     </ul>
 

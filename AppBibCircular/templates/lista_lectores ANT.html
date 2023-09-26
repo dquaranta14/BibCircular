@@ -1,8 +1,9 @@
 {% extends 'padre.html' %}
 
 {% block contenidoQueCambia %}
-    
+
     <form action="{% url 'BuscarLector' %}" method="get">
+
         <p>Nombre/Apellido: <input type="text" name="lector">   <button type="submit" class="btn btn-info">Buscar</button></p>
     </form>
 
@@ -12,21 +13,21 @@
         <table class="table table-striped">        
             <thead>
                 <tr>
-                  <th scope="col">Apellido, Nombre</th>
+                  <th scope="col">Nombre - Apellido</th>
                   <th scope="col">Email</th>
                   <th scope="col">Telefono</th>
                   <th scope="col">Accion</th>
                 </tr>
             </thead>
             <tbody>
-                {% for lector in lectores %}
+                {% for lector in lista_lectores %}
                     <tr>
-                        <td><a href="{% url 'DetalleLectores' lector.id %}">{{lector}}</a></td>
+                        <td>{{lector.nombre}} {{lector.apellido}}</a> </td>
                         <td>{{lector.email}}</td>
                         <td>{{lector.telefono}}</td>
                         <td>
-                            <a href="{% url 'ActualizaLectores' lector.id %}" class="btn btn-primary">Editar</a>
-                            <a href="{% url 'EliminaLectores' lector.id %}" class="btn btn-warning">Eliminar</a>
+                            <a href="{% url 'ActualizaLibros' libro.id %}" class="btn btn-primary">Editar</a>
+                            <a href="{% url 'EliminaLibros' libro.id %}" class="btn btn-warning">Eliminar</a>
                         </button></td>
                     </tr>
                     {% endfor %}
@@ -34,6 +35,7 @@
         </table>
 
     </ul>
-    <a href="{% url 'CreaLectores' %}" class="btn btn-success">Alta Lector</a>
+
+    <button><a href="{% url 'LectorFormulario' %}">Nuevo Lector</a></button>
 
 {% endblock contenidoQueCambia %}

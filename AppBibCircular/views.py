@@ -1,16 +1,18 @@
 from django.shortcuts import render
+from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpRequest
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView, UpdateView, CreateView
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
+from django.core.exceptions import PermissionDenied
 
-from .models import  Categoria, Libro, Lector, Evento, Ventas, Comentario
-from .forms import CategoriaFormulario, LibroFormulario, LectorFormulario, EventoFormulario, UserEditForm
+from .models import  Categoria, Libro, Lector, Evento, Reserva, Comentario
+from .forms import CategoriaFormulario, LibroFormulario, LectorFormulario, EventoFormulario, UserEditForm, ComentarioFormulario, ReservaFormulario
 from datetime import date
 
 # Create your views here.
@@ -24,11 +26,11 @@ def lista_categorias(req):
 
     return render(req, "lista_categorias.html", {"lista_categorias": lista})
 
-def lista_lectores(req):
+""" def lista_lectores(req):
 
     lista = Lector.objects.all()
 
-    return render(req, "lista_lectores.html", {"lista_lectores": lista})
+    return render(req, "lista_lectores.html", {"lista_lectores": lista}) """
 
 def lista_eventos(req):
 
@@ -92,7 +94,7 @@ def categoria_formulario(req):
 # --------------------------------------------------------------
 def lista_libros(req, start=1):
 
-    cant_por_pagina = 6
+    cant_por_pagina = 8
 
     if req.GET.get("direction") == 'next':
         start += 1
@@ -101,16 +103,20 @@ def lista_libros(req, start=1):
 
     inicio = int(start)*cant_por_pagina
     final = (int(start)+1)*cant_por_pagina
-    lista = Libro.objects.all()[inicio:final]
+    lista = Libro.objects.order_by("nombre").filter(disponible = True)[inicio:final]
 
     return render(req, "lista_libros.html", {"lista_libros": lista, "current_page": start})
 
+class LibroList(PermissionRequiredMixin, ListView):
+    permission_required = 'staff_member_required'
+    login_url = 'Login'
+    redirect_field_name = 'lista_libros_admin.html'
 
-class LibroList(ListView):
     model = Libro
-    template_name = "lista_libros.html"
+    template_name = "lista_libros_admin.html"
     context_object_name = "libros"
-    queryset = Libro.objects.order_by("nombre").filter(disponible = True)
+    queryset = Libro.objects.order_by("nombre")
+
 
 class LibroDetail(DetailView):
     model = Libro
@@ -123,21 +129,61 @@ class LibroCreate(CreateView):
     fields = ("__all__")
     success_url = "/app-bibcircular/"
 
-class LibroUpdate(UpdateView):
+class LibroUpdate(LoginRequiredMixin, UpdateView):
     model = Libro
     template_name = "libro_update.html"
     fields = ("__all__")
     success_url = "/app-bibcircular/"
 
-class LibroDelete(DeleteView):
+class LibroDelete(LoginRequiredMixin, DeleteView):
     model = Libro
     template_name = "libro_delete.html"
     success_url = "/app-bibcircular/"
 
+
+# --------------------------------------------------------------
+# ------------    COMENTARIOS-----------------------------------
+# --------------------------------------------------------------
+def nuevo_comentario(req, id):
+
+    libro = Libro.objects.get(id=id)
+
+    if req.method == 'POST':
+
+        info = req.POST
+
+        miFormulario = ComentarioFormulario({
+            "comentario": info["comentario"]
+        })
+        
+        if miFormulario.is_valid():
+
+            data = miFormulario.cleaned_data
+
+            comentario = Comentario(
+                libro=libro, 
+                comentario=data["comentario"], 
+                fecha=date.today(),
+                user=req.user
+            )
+            comentario.save()
+            return render(req, "inicio.html", {"mensaje": "Comentario creado con éxito"})
+        else:
+            print(miFormulario.errors)
+            return render(req, "libro_comentario.html", {"miFormulario": miFormulario, "id": libro.id})
+            
+    else:
+
+        miFormulario = ComentarioFormulario()
+        return render(req, "libro_comentario.html", {"miFormulario": miFormulario, "id": libro.id, "nombre": libro.nombre})
+
 # --------------------------------------------------------------
 # ------------    LECTORES   -----------------------------------
 # --------------------------------------------------------------
-class LectorList(LoginRequiredMixin, ListView):
+class LectorList(PermissionRequiredMixin, ListView):
+    permission_required = 'staff_member_required'
+    login_url = 'Login'
+    
     model = Lector
     template_name = "lector_list.html"
     context_object_name = "lectores"
@@ -148,23 +194,71 @@ class LectorDetail(DetailView):
     template_name = "lector_detail.html"
     context_object_name = "lector"
 
-class LectorCreate(CreateView):
+""" class LectorCreate(CreateView):
     model = Lector
     template_name = "lector_create.html"
     fields = ["nombre", "apellido", "email", "telefono"]
     success_url = "/app-bibcircular/"
-
+ """
 class LectorUpdate(UpdateView):
     model = Lector
     template_name = "lector_update.html"
-    fields = ("__all__")
+    fields = ("nombre", "apellido", "email", "telefono")
     success_url = "/app-bibcircular/"
 
-class LectorDelete(DeleteView):
+class LectorDelete(LoginRequiredMixin, DeleteView):
     model = Lector
     template_name = "lector_delete.html"
     success_url = "/app-bibcircular/"
 
+def crea_lector(req):
+
+    if req.method == 'POST':
+
+        info = req.POST
+
+        miFormulario = LectorFormulario({
+            "nombre": info["nombre"],
+            "apellido": info["apellido"],
+            "email": info["email"],
+            "telefono": info["telefono"]
+        })
+        
+        userForm = UserCreationForm({
+            "username": info["username"],
+            "password1": info["password1"],
+            "password2": info["password2"]
+        })
+
+        if miFormulario.is_valid() and userForm.is_valid():
+
+            data = miFormulario.cleaned_data
+            data.update(userForm.cleaned_data)
+
+            user = User(username=data["username"])
+            user.set_password(data["password1"])
+            user.save()
+
+            lector = Lector(
+                nombre=data["nombre"], 
+                apellido=data["apellido"], 
+                email=data["email"],
+                telefono=data["telefono"],
+                user=user
+            )
+            lector.save()
+            return render(req, "inicio.html", {"mensaje": "Lector creado con éxito"})
+        else:
+            print(miFormulario.errors)
+            print(userForm.errors)
+            return render(req, "lector_create.html", {"mensaje": "Formulario inválido"})
+    else:
+
+        miFormulario = LectorFormulario()
+        userForm = UserCreationForm()
+
+        return render(req, "lector_create.html", {"miFormulario": miFormulario, "userForm": userForm})
+    
 # --------------------------------------------------------------
 # ------------    EVENTOS    -----------------------------------
 # --------------------------------------------------------------
@@ -179,27 +273,23 @@ class EventoDetail(DetailView):
     template_name = "evento_detail.html"
     context_object_name = "evento"
 
-class EventoCreate(CreateView):
+class EventoCreate(LoginRequiredMixin, CreateView):
     model = Evento
     template_name = "evento_create.html"
     fields = ["nombre", "fecha", "horario", "descripcion"]
     success_url = "/app-bibcircular/"
 
-class EventoUpdate(UpdateView):
+class EventoUpdate(LoginRequiredMixin, UpdateView):
     model = Evento
     template_name = "evento_update.html"
     fields = ("__all__")
     success_url = "/app-bibcircular/"
 
-class EventoDelete(DeleteView):
+class EventoDelete(LoginRequiredMixin, DeleteView):
     model = Evento
     template_name = "evento_delete.html"
     success_url = "/app-bibcircular/"
 
-
-def busqueda_libro(req):
-
-    return render(req, "busqueda_libro.html")
 
 def buscar_libro(req):
 
@@ -208,13 +298,11 @@ def buscar_libro(req):
         libros = Libro.objects.filter(nombre__icontains=titulo) | Libro.objects.filter(autor__icontains=titulo )
         if libros:
             return render(req, "resultado_busqueda_libro.html", {"libros": libros})
+        else:
+            return render(req, "resultado_busqueda_libro.html", {"mensaje": "No se encontro ningun libro"})
     else:
-        return HttpResponse('No escribiste ningun titulo')
+        return render(req, "resultado_busqueda_libro.html", {"mensaje": "No ingreso ningun dato para buscar"})
 
-
-def busqueda_lector(req):
-
-    return render(req, "busqueda_lector.html")
 
 def buscar_lector(req):
 
@@ -223,9 +311,47 @@ def buscar_lector(req):
         lectores = Lector.objects.filter(nombre__icontains=lector) | Lector.objects.filter(apellido__icontains=lector )
         if lectores:
             return render(req, "resultado_busqueda_lector.html", {"lectores": lectores})
+        else:
+            return render(req, "resultado_busqueda_lector.html", {"mensaje": "No se encontro ningun lector"})
     else:
-        return HttpResponse('No escribiste ningun nombre de lector')
-    
+        return render(req, "resultado_busqueda_lector.html", {"mensaje": "No ingreso ningun dato para buscar"})
+
+# --------------------------------------------------------------
+# ------------    RESERVAS   -----------------------------------
+# --------------------------------------------------------------
+
+def reserva_libro(req, id):
+
+    libro = Libro.objects.get(id=id)
+
+    if req.method == 'POST':
+
+        info = req.POST
+
+        miFormulario = ReservaFormulario()
+        
+        if miFormulario.is_valid():
+
+            data = miFormulario.cleaned_data
+
+            reserva = Reserva(
+                libro=libro, 
+                us=data["comentario"], 
+                fecha=date.today(),
+                user=req.user
+            )
+            comentario.save()
+            return render(req, "inicio.html", {"mensaje": "Comentario creado con éxito"})
+        else:
+            print(miFormulario.errors)
+            return render(req, "libro_comentario.html", {"miFormulario": miFormulario, "id": libro.id})
+            
+    else:
+
+        miFormulario = ComentarioFormulario()
+        return render(req, "libro_comentario.html", {"miFormulario": miFormulario, "id": libro.id})
+
+
 # --------------------------------------------------------------
 # ------------    USUARIOS   -----------------------------------
 # --------------------------------------------------------------
@@ -306,25 +432,3 @@ def editar_perfil(req):
 
         return render(req, "editarPerfil.html", {"miFomulario": miFormulario})
     
-#def agregar_avatar(req):
-
-    if req.method == 'POST':
-
-        miFormulario = AvatarFormulario(req.POST, req.FILES)
-
-        if miFormulario.is_valid():
-
-            data = miFormulario.cleaned_data
-
-            avatar = Avatar(user=req.user, imagen=data["imagen"])
-
-            avatar.save()
-
-            return render(req, "inicio.html", {"mensaje": f"Avatar actualizado con éxito!"})
-
-        else:
-            return render(req, "inicio.html", {"mensaje": "Formulario inválido"})
-
-    else:
-        miFormulario = AvatarFormulario()
-        return render(req, "agregarAvatar.html", {"miFomulario": miFormulario})

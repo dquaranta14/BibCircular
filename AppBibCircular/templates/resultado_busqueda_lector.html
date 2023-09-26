@@ -5,12 +5,15 @@
 
     <ul>
         
-        {% for lector in lectores %}
-            <li>
-                {{lector.nombre}} {{lector.apellido}} 
-            </li>
-        {% endfor %}
-          
+        {% if lectores %}
+            {% for lector in lectores %}
+                <li>
+                    {{lector.nombre}} {{lector.apellido}} 
+                </li>
+            {% endfor %}
+        {% else %}
+            <h5>{{mensaje}}</h5>
+        {% endif %} 
     </ul>
 
 {% endblock contenidoQueCambia %}

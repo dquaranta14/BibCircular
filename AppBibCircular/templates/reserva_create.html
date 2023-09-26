@@ -1,0 +1,12 @@
+{% extends 'padre.html' %}
+
+{% block contenidoQueCambia %}
+    
+    <form action="{% url 'ReservaLibros' id %}" method="post">{% csrf_token %}
+
+        {{miFormulario.as_p}}
+
+        <button type="submit" class="btn btn-success">Confirmar</button>
+    </form>
+
+{% endblock contenidoQueCambia %}

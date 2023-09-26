@@ -4,13 +4,18 @@
     
     {% if libro.imagen %} 
     <img src="{{libro.imagen.url}}"
-        class="card-img-top" alt='portada'  >
+        class="card-img-top"  height="40px"  alt='portada'  >
     {% endif %}
-    <h2>{{libro.nombre}}</h2>
+    <h3>{{libro.nombre}}</h3>
     <h5>Autor/a: {{libro.autor}}</h5>
-    <h5>Reseña: {{libro.resena}}</h5>
-    <h3>Valor: {{libro.precio}}</h3>
+    <p>Reseña: {{libro.resena}}</p>
+    <h5>Valor: {{libro.precio}}</h5>
     
     <h6>Pertenece a: {{libro.lector}}</h6>
+
+    <a href="{% url 'ComentarioLibros' libro.id %}" class="btn btn-primary">Reservar</a>
+
+    <a href="{% url 'ComentarioLibros' libro.id %}" class="btn btn-secondary">Agregar comentario</a>
+
 
 {% endblock contenidoQueCambia %}

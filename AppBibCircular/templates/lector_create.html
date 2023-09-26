@@ -4,9 +4,14 @@
     
     <form action="{% url 'CreaLectores' %}" method="post">{% csrf_token %}
 
-        {{form.as_p}}
+        {{miFormulario.as_p}}
+        {{userForm.as_p}}
 
         <button type="submit">Enviar</button>
+        
+        <p>{{mensaje}}</p>
+        
     </form>
+    
 
 {% endblock contenidoQueCambia %}

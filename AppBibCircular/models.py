@@ -7,7 +7,7 @@ class Lector(models.Model):
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     email = models.EmailField(null=True)
-    telefono = models.CharField(max_length=50)
+    telefono = models.CharField(max_length=50,null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
@@ -27,7 +27,7 @@ class Libro(models.Model):
 
     nombre = models.CharField(max_length=100)
     autor = models.CharField(max_length=50)
-    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, null=True)
+    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
     resena = models.TextField(null=True)
     precio = models.FloatField(null=True)
     vendedor = models.ForeignKey(Lector, on_delete=models.CASCADE, null=True)
@@ -40,11 +40,14 @@ class Libro(models.Model):
 
 class Comentario(models.Model):
 
-    libro = models.ForeignKey(Libro, on_delete=models.CASCADE, null=True)
-    comentario = models.TextField(null=True)
+    libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
+    comentario = models.TextField()
     fecha = models.DateField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-
+    def __str__(self):
+        return f'{self.libro}, {self.fecha}'
+    
 class Evento(models.Model):
 
     nombre = models.CharField(max_length=50)
@@ -55,14 +58,13 @@ class Evento(models.Model):
     def __str__(self):
         return f'{self.nombre} - {self.fecha} {self.horario}'
 
-class Ventas(models.Model):
+class Reserva(models.Model):
 
     libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
-    lector = models.ForeignKey(Lector, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     fecha = models.DateTimeField()
-    importe = models.FloatField()
 
     def __str__(self):
-        return f'{self.libro} - {self.lector} - {self.fecha}'
+        return f'{self.libro} - {self.user} - {self.fecha}'
     class Meta():
-        verbose_name_plural = 'Ventas'
+        verbose_name_plural = 'Reservas'

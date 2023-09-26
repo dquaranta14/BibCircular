@@ -1,11 +1,17 @@
 from django import forms
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.models import User
-from .models import Libro
+from .models import Libro, Lector, Comentario, Reserva
 
 class CategoriaFormulario(forms.Form):
 
     nombre = forms.CharField(max_length=50, required=True)
+
+class LectorFormulario(forms.ModelForm):
+
+    class Meta:
+        model = Lector
+        fields = ('nombre', 'apellido', 'email', 'telefono')
 
 class LibroFormulario(forms.ModelForm):
 
@@ -13,13 +19,18 @@ class LibroFormulario(forms.ModelForm):
         model=Libro
         fields=('__all__')
 
+class ComentarioFormulario(forms.ModelForm):
 
-class LectorFormulario(forms.Form):
+    class Meta:
+        model=Comentario
+        fields=('comentario',)
+
+""" class LectorFormulario(forms.Form):
 
     nombre = forms.CharField(required=True)
     apellido = forms.CharField(required=True)
     email = forms.EmailField()
-    telefono = forms.CharField(max_length=50)
+    telefono = forms.CharField(max_length=50) """
 
 class EventoFormulario(forms.Form):
 
@@ -27,6 +38,7 @@ class EventoFormulario(forms.Form):
     fecha = forms.DateField(required=True)
     horario = forms.TimeField(required=True)
     descripcion = forms.CharField(required=False)
+
 
 class UserEditForm(UserChangeForm):
 
@@ -51,3 +63,8 @@ class UserEditForm(UserChangeForm):
             raise forms.ValidationError("Las contraseñas no coinciden")
         return password2
     
+class ReservaFormulario(forms.ModelForm):
+
+       class Meta:
+        model=Reserva
+        fields=('__all__')

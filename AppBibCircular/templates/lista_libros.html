@@ -2,12 +2,17 @@
 
 {% block contenidoQueCambia %}
 
+<form action="{% url 'BuscarLibro' %}" method="get">
+
+    <p>Titulo/Autor: <input type="text" name="titulo">   <button type="submit" class="btn btn-info">Buscar</button></p>
+</form>
+
 <section class="lista-libros">
     {% for libro in lista_libros %}
     <div class="card" style="width: 18rem;">
         {% if libro.imagen %} 
             <img src="{{libro.imagen.url}}"
-                class="card-img-top" alt='portada'>
+                class="card-img-top" height="300px" alt='portada'>
         {% endif %}
         <div class="card-body">
             <h3 class="card-title">{{libro.nombre}}</h3>
@@ -22,7 +27,7 @@
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="{% url 'ListaLibros' current_page %}?direction=next">Next</a></li>
+            <li class="page-item"><a class="page-link" href="{% url 'ListaLibrosCards' current_page %}?direction=next">Next</a></li>
         </ul>
     </nav>
 </div>

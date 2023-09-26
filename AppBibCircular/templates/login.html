@@ -6,11 +6,10 @@
 
         {{miFomulario.as_p}}
 
-        <button type="submit">Iniciar Sesión</button>
-        <button>
-            <a href="{% url 'Registrar' %}">Nuevo usuario</a>
-        </button>
-
+        <button type="submit" class="btn btn-success">Iniciar Sesión</button>
+        <p></p>
+        <a href="{% url 'Registrar' %}">Nuevo usuario</a>
+        
     </form>
     
     <p>{{mensaje}}</p>
