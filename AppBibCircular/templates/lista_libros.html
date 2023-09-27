@@ -2,10 +2,12 @@
 
 {% block contenidoQueCambia %}
 
-<form action="{% url 'BuscarLibro' %}" method="get">
+<div class="text-center">
+    <form action="{% url 'BuscarLibro' %}" method="get">
 
-    <p>Titulo/Autor: <input type="text" name="titulo">   <button type="submit" class="btn btn-info">Buscar</button></p>
-</form>
+        <p>Titulo/Autor: <input type="text" name="titulo">   <button type="submit" class="btn btn-info">Buscar</button></p>
+    </form>
+</div>
 
 <section class="lista-libros">
     {% for libro in lista_libros %}

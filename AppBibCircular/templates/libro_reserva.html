@@ -4,9 +4,10 @@
     
     <form method="post">{% csrf_token %}
 
-        <p>Está seguro de eliminar el libro?</p>
+        <p>Está seguro de Reservar el libro?</p>
+        <p><strong>{{nombre}}</strong></p>
 
-        <button type="submit" class="btn btn-danger">Confirmar</button>
+        <button type="submit" class="btn btn-success">Confirmar</button>
         <a href="{% url 'Inicio' %}" class="btn btn-info">Cancelar</a>
     </form>
 

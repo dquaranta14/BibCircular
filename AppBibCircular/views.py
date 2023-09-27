@@ -15,6 +15,9 @@ from .models import  Categoria, Libro, Lector, Evento, Reserva, Comentario
 from .forms import CategoriaFormulario, LibroFormulario, LectorFormulario, EventoFormulario, UserEditForm, ComentarioFormulario, ReservaFormulario
 from datetime import date
 
+from django.core.mail import send_mail
+
+
 # Create your views here.
 def inicio(req):
 
@@ -26,11 +29,6 @@ def lista_categorias(req):
 
     return render(req, "lista_categorias.html", {"lista_categorias": lista})
 
-""" def lista_lectores(req):
-
-    lista = Lector.objects.all()
-
-    return render(req, "lista_lectores.html", {"lista_lectores": lista}) """
 
 def lista_eventos(req):
 
@@ -63,32 +61,7 @@ def categoria_formulario(req):
 
         return render(req, "categoria_formulario.html", {"miFomulario": miFormulario})
 
-""" def libro_formulario(req):
 
-    print('method', req.method)
-    print('post', req.POST)
-
-    if req.method == 'POST':
-
-        miFormulario = LibroFormulario(req.POST)
-        
-        if miFormulario.is_valid():
-
-            print(miFormulario.cleaned_data)
-            data = miFormulario.cleaned_data
-
-            #libro = Libro(nombre=data["nombre"], autor=data["autor"], categoria=data["categoria"], resena=data["resena"], precio=data["precio"])
-            libro = Libro(nombre=data["nombre"], autor=data["autor"], resena=data["resena"], precio=data["precio"])
-            libro.save()
-            return render(req, "inicio.html", {"mensaje": "Libro creado con éxito"})
-        else:
-            return render(req, "inicio.html", {"mensaje": "Formulario inválido"})
-    else:
-
-        miFormulario = LibroFormulario()
-
-        return render(req, "libro_formulario.html", {"miFomulario": miFormulario})
- """
 # --------------------------------------------------------------
 # ------------    LIBROS   -------------------------------------
 # --------------------------------------------------------------
@@ -144,6 +117,7 @@ class LibroDelete(LoginRequiredMixin, DeleteView):
 # --------------------------------------------------------------
 # ------------    COMENTARIOS-----------------------------------
 # --------------------------------------------------------------
+# @login_required
 def nuevo_comentario(req, id):
 
     libro = Libro.objects.get(id=id)
@@ -177,6 +151,7 @@ def nuevo_comentario(req, id):
         miFormulario = ComentarioFormulario()
         return render(req, "libro_comentario.html", {"miFormulario": miFormulario, "id": libro.id, "nombre": libro.nombre})
 
+
 # --------------------------------------------------------------
 # ------------    LECTORES   -----------------------------------
 # --------------------------------------------------------------
@@ -194,12 +169,6 @@ class LectorDetail(DetailView):
     template_name = "lector_detail.html"
     context_object_name = "lector"
 
-""" class LectorCreate(CreateView):
-    model = Lector
-    template_name = "lector_create.html"
-    fields = ["nombre", "apellido", "email", "telefono"]
-    success_url = "/app-bibcircular/"
- """
 class LectorUpdate(UpdateView):
     model = Lector
     template_name = "lector_update.html"
@@ -236,7 +205,11 @@ def crea_lector(req):
             data.update(userForm.cleaned_data)
 
             user = User(username=data["username"])
+            user.first_name = data["nombre"]
+            user.last_name = data["apellido"]
+            user.email = data["email"]
             user.set_password(data["password1"])
+            
             user.save()
 
             lector = Lector(
@@ -319,38 +292,30 @@ def buscar_lector(req):
 # --------------------------------------------------------------
 # ------------    RESERVAS   -----------------------------------
 # --------------------------------------------------------------
-
+# @login_required
 def reserva_libro(req, id):
 
     libro = Libro.objects.get(id=id)
 
     if req.method == 'POST':
 
-        info = req.POST
-
-        miFormulario = ReservaFormulario()
-        
-        if miFormulario.is_valid():
-
-            data = miFormulario.cleaned_data
-
-            reserva = Reserva(
+        reserva = Reserva(
                 libro=libro, 
-                us=data["comentario"], 
-                fecha=date.today(),
-                user=req.user
+                user=req.user, 
+                fecha=date.today()
             )
-            comentario.save()
-            return render(req, "inicio.html", {"mensaje": "Comentario creado con éxito"})
-        else:
-            print(miFormulario.errors)
-            return render(req, "libro_comentario.html", {"miFormulario": miFormulario, "id": libro.id})
+        reserva.save()
+            
+        libro.disponible = False
+        libro.save()
+    
+        send_mail(f'Reserva libro: {libro.nombre}',f'{req.user.first_name} {req.user.last_name} - usuario {req.user} \nHa revervado el libro: {libro.nombre} del vendedor: {libro.vendedor}','danielaquaranta14@gmail.com',['dquaranta@hotmail.com'])
+
+        return render(req, "inicio.html", {"mensaje": "Reserva realizada con éxito"})
             
     else:
-
-        miFormulario = ComentarioFormulario()
-        return render(req, "libro_comentario.html", {"miFormulario": miFormulario, "id": libro.id})
-
+        return render(req, "libro_reserva.html", {"id": libro.id, "nombre": libro.nombre})
+   
 
 # --------------------------------------------------------------
 # ------------    USUARIOS   -----------------------------------

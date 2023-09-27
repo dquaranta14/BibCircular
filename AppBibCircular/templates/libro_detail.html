@@ -1,21 +1,38 @@
 {% extends 'padre.html' %}
 
 {% block contenidoQueCambia %}
-    
+    <div class="container">
+
     {% if libro.imagen %} 
-    <img src="{{libro.imagen.url}}"
-        class="card-img-top"  height="40px"  alt='portada'  >
+    <p><img src="{{libro.imagen.url}}"
+       alt='portada'></p>
     {% endif %}
     <h3>{{libro.nombre}}</h3>
-    <h5>Autor/a: {{libro.autor}}</h5>
+    <p><strong>Autor/a: {{libro.autor}}</strong></p>
+    <p>Categoria: {{libro.categoria}}</p>
     <p>Reseña: {{libro.resena}}</p>
     <h5>Valor: {{libro.precio}}</h5>
     
-    <h6>Pertenece a: {{libro.lector}}</h6>
+    <p><small>Pertenece a: {{libro.vendedor}}</small></p>
 
-    <a href="{% url 'ComentarioLibros' libro.id %}" class="btn btn-primary">Reservar</a>
+    <br>
+    {% if libro.comentarios.all %}
+        <h5>Comentarios de los lectores: </h5>
+        <ul class="list-group list-group-flush">
+            
+            {% for comentario in libro.comentarios.all %}
+                <li class="list-group-item">{{comentario.comentario}}
+                    <p><small><em>{{comentario.fecha}} - {{comentario.user.username}}</em></small>
+                </li>
+            {% endfor %}
+        
+        </ul>
+    {% endif %}
+
+
+    <a href="{% url 'ReservaLibros' libro.id %}" class="btn btn-primary">Reservar</a>
 
     <a href="{% url 'ComentarioLibros' libro.id %}" class="btn btn-secondary">Agregar comentario</a>
-
+    </div>
 
 {% endblock contenidoQueCambia %}

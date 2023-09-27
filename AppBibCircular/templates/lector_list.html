@@ -2,10 +2,13 @@
 
 {% block contenidoQueCambia %}
     
-    <form action="{% url 'BuscarLector' %}" method="get">
-        <p>Nombre/Apellido: <input type="text" name="lector">   <button type="submit" class="btn btn-info">Buscar</button></p>
-    </form>
-
+    <div class="text-center">
+    
+        <form action="{% url 'BuscarLector' %}" method="get">
+            <p>Nombre/Apellido: <input type="text" name="lector">   <button type="submit" class="btn btn-info">Buscar</button></p>
+        </form>
+    </div>
+    
     <h1>Lista de Lectores</h1>
 
     <ul>

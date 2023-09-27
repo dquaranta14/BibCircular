@@ -40,7 +40,7 @@ class Libro(models.Model):
 
 class Comentario(models.Model):
 
-    libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
+    libro = models.ForeignKey(Libro, related_name='comentarios', on_delete=models.CASCADE)
     comentario = models.TextField()
     fecha = models.DateField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
