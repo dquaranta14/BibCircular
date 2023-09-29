@@ -6,32 +6,46 @@ Nombre del Proyecto: Biblioteca Circular
 Versión 1.0
 
 Descripción de mi Proyecto:
-Es una pagina web que permite llevar un registro de libros que tiene el lugar, registrar lectores que compran y/o venden libros y tambien eventos que se dan en el lugar.
+Es una pagina web que permite llevar un registro de libros que tiene el lugar, registrar lectores que quieren comprar y/o vender libros. Tambien se notificaran eventos que se dan en el lugar.
 
-No sera necesario loguearse para 
+La pagina tiene un manejo de usuario. Segun si la persona este logueada o no va a poder ver ciertas cosas de la pagina.
 
-Los usuarios pueden realizar las siguientes accciones:
-- Publicar instrumentos musicales
-- Visualizar instrumentos musicales publicados, los cuales están distribuidos en las secciones "Guitarras", "Bajos", "Pedales", "Amplificadores", "Teclados" y "Otros"
-- Comentar instrumentos musicales
-- Editar el perfil de Usuario
-- Cambiar la contraseña de Usuario
-- Cerrar Sesión
-- Login en caso de haber cerrado sesión
+Sin loguearse podra ver:
+- Listado de Libros disponibles
+- Listado de Eventos
+- Registrarse como usuario
 
-Nota: La opción de editar y eliminar instrumentos musicales solo le está permitido al autor de la publicación del instrumento.
+Una vez que el usuario se loguee podra acceder a:
+- Listado de Libros disponibles
+- Listado de Eventos
+- Seleccionar un libro y cargar un comentario sobre el mismo
+- Seleccionar un libro y reservarlo. Se envia mail al lugar con copia al usuario avisando que el libro quedo reservado.
+
+A su vez si el usario esta como miembro del Staff podra acceder todo lo anterior, mas:
+- Cargar, modificar y eliminar libros.
+- Listado de lectores
+- Cargar nuevos lectores, modificar y eliminar.
+- Cargar, modificar y eliminar eventos.
+
 
 Tecnología utilizada:
 - Python 3.11
 - Django
 - Bootstrap 5.2
 
+Para acceder se debe ingresar con la siguiente direccion:
+http://127.0.0.1:8000/app-bibcircular/
+
+El usuario administrador podra entrar al admin de la base de datos con:
+http://127.0.0.1:8000/admin
+usuario : dquaranta
+pwd: dani2023
+
 Archivo de testing:
 Casos de prueba BibCircular.xlsx
 
 Video con demo
-https://youtu.be/O3tgo0Txl9Q
-
+demoBibliotecaCircular.mkv
 
 
 
