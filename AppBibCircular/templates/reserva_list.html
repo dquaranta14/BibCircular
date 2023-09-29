@@ -19,8 +19,8 @@
                 {% for reserva in reservas %}
                     <tr>
                         <td>{{reserva.libro}}</td>
-                        <td>{{reserva.user.first_name}} {{reserva.user.first_name}}</td>
-                        <td>{{reserva.fecha}}</td>
+                        <td>{{reserva.user.first_name}} {{reserva.user.last_name}}</td>
+                        <td>{{reserva.fecha|date:"d/m/Y"}}</td>
                     </tr>
                 {% endfor %}
             </tbody>

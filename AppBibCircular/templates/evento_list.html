@@ -22,7 +22,7 @@
                     <tr>
                         <td><a href="{% url 'DetalleEventos' evento.id%}" class="text-decoration-none">{{evento.nombre}}</a></td>
                         <td>{{evento.lugar}}</td>
-                        <td>{{evento.fecha}}</td>
+                        <td>{{evento.fecha|date:"d/m/Y"}}</td>
                         <td>{{evento.horario}}</td>
                         <td>
                             {% if user.is_staff  %}

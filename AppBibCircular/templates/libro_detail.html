@@ -3,37 +3,37 @@
 {% block contenidoQueCambia %}
     <div class="container">
 
-    {% if libro.imagen %} 
-    <p><img src="{{libro.imagen.url}}"
-       alt='portada'></p>
-    {% endif %}
-    <h3 style="color:chocolate">{{libro.nombre}}</h3>
-    <p><strong>Autor/a: {{libro.autor}}</strong>
-    <br>Categoria: {{libro.categoria}}
-    <br>Reseña: {{libro.resena}}</p>
-    <h5>Valor: $ {{libro.precio}}</h5>
-    
-    <p><small>Pertenece a: {{libro.vendedor}}</small></p>
-
-    <br>
-    {% if libro.comentarios.all %}
-        <h5>Comentarios de los lectores: </h5>
-        <ul class="list-group list-group-flush">
-            
-            {% for comentario in libro.comentarios.all %}
-                <li class="list-group-item">{{comentario.comentario}}
-                    <p><small><em>{{comentario.fecha}} - {{comentario.user.username}}</em></small>
-                </li>
-            {% endfor %}
+        {% if libro.imagen %} 
+        <p><img src="{{libro.imagen.url}}"
+        alt='portada'></p>
+        {% endif %}
+        <h3 style="color:chocolate">{{libro.nombre}}</h3>
+        <p><strong>Autor/a: {{libro.autor}}</strong>
+        <br>Categoria: {{libro.categoria}}
+        <br>Reseña: {{libro.resena}}</p>
+        <h5>Valor: $ {{libro.precio}}</h5>
         
-        </ul>
-    {% endif %}
+        <p><small>Pertenece a: {{libro.vendedor}}</small></p>
 
-    {% if user.is_authenticated %}
-        <a href="{% url 'ReservaLibros' libro.id %}" class="btn btn-primary">Reservar</a>
+        <br>
+        {% if libro.comentarios.all %}
+            <h5>Comentarios de los lectores: </h5>
+            <ul class="list-group list-group-flush">
+                
+                {% for comentario in libro.comentarios.all %}
+                    <li class="list-group-item">{{comentario.comentario}}
+                        <p><small><em>{{comentario.fecha}} - {{comentario.user.username}}</em></small>
+                    </li>
+                {% endfor %}
+            
+            </ul>
+        {% endif %}
 
-        <a href="{% url 'ComentarioLibros' libro.id %}" class="btn btn-secondary">Agregar comentario</a>
-    {% endif %}
+   
+            <a href="{% url 'ReservaLibros' libro.id %}" class="btn btn-primary">Reservar</a>
+
+            <a href="{% url 'ComentarioLibros' libro.id %}" class="btn btn-secondary">Agregar comentario</a>
+       
     </div>
 
 {% endblock contenidoQueCambia %}

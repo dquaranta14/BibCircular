@@ -5,7 +5,8 @@
         <h3>Datos del Evento</h3>
         <br>
         <p style="color:chocolate"><strong>{{evento.nombre}}</strong></p>
-        <p>Dia: {{evento.fecha}}  Horario: {{evento.horario}}</p>
+        <p>Dia: {{evento.fecha|date:"d/m/Y"}}</p>
+        <p>Horario: {{evento.horario}}</p>
         <p>Lugar: {{evento.Lugar}}</p>
         <br>
         <p>Detalle: {{evento.descripcion}}</p>

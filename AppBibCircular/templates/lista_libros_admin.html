@@ -26,7 +26,12 @@
                     <tr>
                         <td> <a href="{% url 'DetalleLibros' libro.id %}" class="text-decoration-none">{{libro.nombre}}</a> </td>
                         <td>{{libro.autor}}</td>
-                        <td>{{libro.disponible}}</td>
+                        <td>{% if libro.disponible %}
+                                <i class="fa fa-check"></i>
+                            {% else %}
+                                <i class="fa fa-times"></i>
+                            {% endif %}
+                        </td>
                         <td>
                             <a href="{% url 'ActualizaLibros' libro.id %}" class="btn btn-primary">Editar</a>
                             <a href="{% url 'EliminaLibros' libro.id %}" class="btn btn-warning">Eliminar</a>

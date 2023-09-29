@@ -118,7 +118,7 @@ class LibroDelete(LoginRequiredMixin, DeleteView):
 # --------------------------------------------------------------
 # ------------    COMENTARIOS-----------------------------------
 # --------------------------------------------------------------
-# @login_required
+@login_required
 def nuevo_comentario(req, id):
 
     libro = Libro.objects.get(id=id)
@@ -225,7 +225,7 @@ def crea_lector(req):
         else:
             print(miFormulario.errors)
             print(userForm.errors)
-            return render(req, "lector_create.html", {"mensaje": "Formulario inválido"})
+            return render(req, "inicio.html", {"mensaje": "Formulario inválido"})
     else:
 
         miFormulario = LectorFormulario()
@@ -293,7 +293,7 @@ def buscar_lector(req):
 # --------------------------------------------------------------
 # ------------    RESERVAS   -----------------------------------
 # --------------------------------------------------------------
-# @login_required
+@login_required
 def reserva_libro(req, id):
 
     libro = Libro.objects.get(id=id)

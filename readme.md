@@ -29,11 +29,12 @@ A su vez si el usario esta como miembro del Staff podra acceder todo lo anterior
 
 
 Tecnología utilizada:
-- Python 3.11
-- Django
-- Bootstrap 5.2
+- Python 3.11.0
+- Django 4.2.5
+- Bootstrap 5.3.2
+- SQLite Version 3.12.2
 
-Para acceder se debe ingresar con la siguiente direccion:
+Para acceder a la pagina se debe ingresar con la siguiente direccion:
 http://127.0.0.1:8000/app-bibcircular/
 
 El usuario administrador podra entrar al admin de la base de datos con:
@@ -44,28 +45,6 @@ pwd: dani2023
 Archivo de testing:
 Casos de prueba BibCircular.xlsx
 
-Video con demo
+Video con demo:
 demoBibliotecaCircular.mkv
 
-
-
-
-
-
-
-
-
-
-BIBLIOTECA CIRCULAR es una pagina que permite llevar un registro de libros que tiene el lugar, registrar lectores que compran y/o venden libros y tambien eventos que se dan en el lugar.
-
-CONSULTAS DISPONIBLES:
-* Categorias
-* Libros
-* Lectores
-* Eventos
-
-CARGAS DISPONIBLES:
-* Categorias
-* Libros
-* Lectores
-* Eventos
