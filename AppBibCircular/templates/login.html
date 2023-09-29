@@ -2,16 +2,17 @@
 
 {% block contenidoQueCambia %}
 
-    <form action="" method="post">{% csrf_token %}
+    <div class="container">
+        <form action="" method="post">{% csrf_token %}
 
-        {{miFomulario.as_p}}
+            {{miFomulario.as_p}}
 
-        <button type="submit" class="btn btn-success">Iniciar Sesión</button>
-        <p></p>
-        <a href="{% url 'CreaLectores' %}">Nuevo usuario</a>
-        
-    </form>
-    
+            <button type="submit" class="btn btn-success">Iniciar Sesión</button>
+            <br>
+            <a href="{% url 'CreaLectores' %}">Nuevo usuario</a>
+            
+        </form>
+    </div>
     <p>{{mensaje}}</p>
 
 {% endblock contenidoQueCambia %}

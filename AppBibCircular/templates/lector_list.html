@@ -5,7 +5,7 @@
     <div class="text-center">
     
         <form action="{% url 'BuscarLector' %}" method="get">
-            <p>Nombre/Apellido: <input type="text" name="lector">   <button type="submit" class="btn btn-info">Buscar</button></p>
+            <p><strong>Nombre/Apellido: </strong><input type="text" name="lector">   <button type="submit" class="btn btn-info">Buscar</button></p>
         </form>
     </div>
     
@@ -24,7 +24,7 @@
             <tbody>
                 {% for lector in lectores %}
                     <tr>
-                        <td><a href="{% url 'DetalleLectores' lector.id %}">{{lector}}</a></td>
+                        <td><a href="{% url 'DetalleLectores' lector.id %}" class="text-decoration-none">{{lector}}</a></td>
                         <td>{{lector.email}}</td>
                         <td>{{lector.telefono}}</td>
                         <td>

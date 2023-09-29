@@ -5,21 +5,21 @@
 <div class="text-center">
     <form action="{% url 'BuscarLibro' %}" method="get">
 
-        <p>Titulo/Autor: <input type="text" name="titulo">   <button type="submit" class="btn btn-info">Buscar</button></p>
+        <p><strong>Titulo/Autor: </strong><input type="text" name="titulo">   <button type="submit" class="btn btn-info">Buscar</button></p>
     </form>
 </div>
 
 <section class="lista-libros">
     {% for libro in lista_libros %}
-    <div class="card" style="width: 18rem;">
+    <div class="card" style="width: 14rem;">
         {% if libro.imagen %} 
             <img src="{{libro.imagen.url}}"
-                class="card-img-top" height="300px" alt='portada'>
+                class="card-img-top" width="300">
         {% endif %}
         <div class="card-body">
             <h3 class="card-title">{{libro.nombre}}</h3>
             <h6 class="card-title">{{libro.autor}}</h6>
-            <h4 class="card-title">{{libro.precio}}</h4>
+            <h4 class="card-title">$ {{libro.precio}}</h4>
             <a href="{% url 'DetalleLibros' libro.id %}" class="btn btn-primary">Ver</a>
         </div>
     </div>

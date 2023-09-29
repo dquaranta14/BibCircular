@@ -8,11 +8,12 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import PasswordChangeView
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.exceptions import PermissionDenied
 
 from .models import  Categoria, Libro, Lector, Evento, Reserva, Comentario
-from .forms import CategoriaFormulario, LibroFormulario, LectorFormulario, EventoFormulario, UserEditForm, ComentarioFormulario, ReservaFormulario
+from .forms import CategoriaFormulario, LibroFormulario, LectorFormulario, EventoFormulario, UserEditForm, ComentarioFormulario, ReservaFormulario, PasswordEditForm
 from datetime import date
 
 from django.core.mail import send_mail
@@ -141,7 +142,7 @@ def nuevo_comentario(req, id):
                 user=req.user
             )
             comentario.save()
-            return render(req, "inicio.html", {"mensaje": "Comentario creado con éxito"})
+            return render(req, "inicio.html")
         else:
             print(miFormulario.errors)
             return render(req, "libro_comentario.html", {"miFormulario": miFormulario, "id": libro.id})
@@ -239,7 +240,7 @@ class EventoList(ListView):
     model = Evento
     template_name = "evento_list.html"
     context_object_name = "eventos"
-    queryset = Evento.objects.order_by("fecha")
+    queryset = Evento.objects.order_by("-fecha")
 
 class EventoDetail(DetailView):
     model = Evento
@@ -308,14 +309,36 @@ def reserva_libro(req, id):
             
         libro.disponible = False
         libro.save()
-    
-        send_mail(f'Reserva libro: {libro.nombre}',f'{req.user.first_name} {req.user.last_name} - usuario {req.user} \nHa revervado el libro: {libro.nombre} del vendedor: {libro.vendedor}','danielaquaranta14@gmail.com',['dquaranta@hotmail.com'])
+
+        send_mail(f'Reserva libro: {libro.nombre}',f'{req.user.first_name} {req.user.last_name} - usuario {req.user} \nHa revervado el libro: {libro.nombre} del vendedor: {libro.vendedor}','bibliotecacirculardq@gmail.com',['bibliotecacirculardq@gmail.com', f'{req.user.email}'])
+
 
         return render(req, "inicio.html", {"mensaje": "Reserva realizada con éxito"})
             
     else:
         return render(req, "libro_reserva.html", {"id": libro.id, "nombre": libro.nombre})
-   
+
+class ReservaList(PermissionRequiredMixin, ListView):
+    permission_required = 'staff_member_required'
+    login_url = 'Login'
+
+    model = Reserva
+    template_name = "reserva_list.html"
+    context_object_name = "reservas"
+    queryset = Reserva.objects.order_by("-fecha")  
+
+# @login_required
+""" def reserva_confirmar(req, id):
+
+    if req.method == 'GET':
+        
+        reserva = Reserva.objects.get(id=id)
+
+        reserva.confirmada = True
+        reserva.save()
+
+        return render(req, "reserva_list.html", {"mensaje": "Reserva confirmada"}) """
+    
 
 # --------------------------------------------------------------
 # ------------    USUARIOS   -----------------------------------
@@ -337,7 +360,7 @@ def loginView(req):
 
             if user:
                 login(req, user)
-                return render(req, "inicio.html", {"mensaje": f"Bienvenido {usuario}"})
+                return render(req, "inicio.html")
             else:
                 return render(req, "inicio.html", {"mensaje": "Datos incorrectos"})
 
@@ -347,6 +370,11 @@ def loginView(req):
     else:
         miFormulario = AuthenticationForm()
         return render(req, "login.html", {"miFomulario": miFormulario})
+
+class CambioPassword(PasswordChangeView):
+    form_class = PasswordEditForm
+    template_name = 'cambio_password.html'
+    success_url = "/app-bibcircular/"
 
 def register(req):
 
@@ -393,7 +421,7 @@ def editar_perfil(req):
             return render(req, "editarPerfil.html", {"miFomulario": miFormulario})
     else:
 
-        miFormulario = UserEditForm(instance=req.user)
-
         return render(req, "editarPerfil.html", {"miFomulario": miFormulario})
     
+def sobremi(req):
+    return render(req, 'sobremi.html')

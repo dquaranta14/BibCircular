@@ -7,11 +7,11 @@
     <p><img src="{{libro.imagen.url}}"
        alt='portada'></p>
     {% endif %}
-    <h3>{{libro.nombre}}</h3>
-    <p><strong>Autor/a: {{libro.autor}}</strong></p>
-    <p>Categoria: {{libro.categoria}}</p>
-    <p>Reseña: {{libro.resena}}</p>
-    <h5>Valor: {{libro.precio}}</h5>
+    <h3 style="color:chocolate">{{libro.nombre}}</h3>
+    <p><strong>Autor/a: {{libro.autor}}</strong>
+    <br>Categoria: {{libro.categoria}}
+    <br>Reseña: {{libro.resena}}</p>
+    <h5>Valor: $ {{libro.precio}}</h5>
     
     <p><small>Pertenece a: {{libro.vendedor}}</small></p>
 
@@ -29,10 +29,11 @@
         </ul>
     {% endif %}
 
+    {% if user.is_authenticated %}
+        <a href="{% url 'ReservaLibros' libro.id %}" class="btn btn-primary">Reservar</a>
 
-    <a href="{% url 'ReservaLibros' libro.id %}" class="btn btn-primary">Reservar</a>
-
-    <a href="{% url 'ComentarioLibros' libro.id %}" class="btn btn-secondary">Agregar comentario</a>
+        <a href="{% url 'ComentarioLibros' libro.id %}" class="btn btn-secondary">Agregar comentario</a>
+    {% endif %}
     </div>
 
 {% endblock contenidoQueCambia %}

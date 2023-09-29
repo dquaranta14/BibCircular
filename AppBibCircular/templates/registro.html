@@ -1,12 +1,13 @@
 {% extends 'padre.html' %}
 
 {% block contenidoQueCambia %}
-    
-    <form action="{% url 'Registrar' %}" method="post">{% csrf_token %}
+    <div class="container">
+        <h3>Editar Lector</h3>
+        <form action="{% url 'Registrar' %}" method="post">{% csrf_token %}
 
-        {{miFomulario.as_p}}
+            {{miFomulario.as_p}}
 
-        <button type="submit">Registrar</button>
-    </form>
-
+            <button type="submit">Registrar</button>
+        </form>
+    </div>
 {% endblock contenidoQueCambia %}

@@ -1,17 +1,19 @@
 {% extends 'padre.html' %}
 
 {% block contenidoQueCambia %}
-    
-    <form action="{% url 'CreaLectores' %}" method="post">{% csrf_token %}
+    <div class="container">
+        <h3>Crea Lector/Usuario</h3>
+        <form action="{% url 'CreaLectores' %}" method="post">{% csrf_token %}
 
-        {{miFormulario.as_p}}
-        {{userForm.as_p}}
+            {{miFormulario.as_p}}
+            {{userForm.as_p}}
 
-        <button type="submit">Enviar</button>
-        
-        <p>{{mensaje}}</p>
-        
-    </form>
+            <button type="submit" class="btn btn-success">Enviar</button>
+                
+            <p>{{mensaje}}</p>
+                
+        </form>
+    </div>
     
 
 {% endblock contenidoQueCambia %}

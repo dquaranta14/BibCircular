@@ -1,0 +1,31 @@
+{% extends 'padre.html' %}
+
+{% block contenidoQueCambia %}
+    <p><strong>{{mensaje}}</strong></p>
+    <p></p>
+    <h1>Lista de Reservas</h1>
+
+    <ul>
+           
+        <table class="table table-striped">        
+            <thead>
+                <tr>
+                  <th scope="col">Libro</th>
+                  <th scope="col">Usuario</th>
+                  <th scope="col">Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reserva in reservas %}
+                    <tr>
+                        <td>{{reserva.libro}}</td>
+                        <td>{{reserva.user.first_name}} {{reserva.user.first_name}}</td>
+                        <td>{{reserva.fecha}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>        
+     
+    </ul>
+
+{% endblock contenidoQueCambia %}

@@ -1,14 +1,14 @@
 {% extends 'padre.html' %}
 
 {% block contenidoQueCambia %}
-    
-    <form method="post">{% csrf_token %}
+    <div class="container">
+        <form method="post">{% csrf_token %}
 
-        <p>Está seguro de Reservar el libro?</p>
-        <p><strong>{{nombre}}</strong></p>
+            <p>Está seguro de Reservar el libro?</p>
+            <p><strong>{{nombre}}</strong></p>
 
-        <button type="submit" class="btn btn-success">Confirmar</button>
-        <a href="{% url 'Inicio' %}" class="btn btn-info">Cancelar</a>
-    </form>
-
+            <button type="submit" class="btn btn-success">Confirmar</button>
+            <a href="{% url 'Inicio' %}" class="btn btn-info">Cancelar</a>
+        </form>
+    </div>
 {% endblock contenidoQueCambia %}

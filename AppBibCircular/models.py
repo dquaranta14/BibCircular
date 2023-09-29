@@ -51,6 +51,7 @@ class Comentario(models.Model):
 class Evento(models.Model):
 
     nombre = models.CharField(max_length=50)
+    lugar = models.CharField(max_length=100, null=True)
     fecha = models.DateField()
     horario = models.TimeField()
     descripcion = models.TextField(null=True)
@@ -63,6 +64,7 @@ class Reserva(models.Model):
     libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     fecha = models.DateTimeField()
+    confirmada = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.libro} - {self.user} - {self.fecha}'

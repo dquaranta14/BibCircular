@@ -2,11 +2,13 @@
 
 {% block contenidoQueCambia %}
     
-    <form action="{% url 'ActualizaLibros' libro.id%}" enctype="multipart/form-data" method="post">{% csrf_token %}
+    <div class="container">
+        <h3>Actualizar Libro</h3>
+        <form action="{% url 'ActualizaLibros' libro.id%}" enctype="multipart/form-data" method="post">{% csrf_token %}
 
-        {{form.as_p}}
+            {{form.as_p}}
 
-        <button type="submit">Enviar</button>
-    </form>
-
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
 {% endblock contenidoQueCambia %}

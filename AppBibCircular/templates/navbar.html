@@ -3,16 +3,24 @@
     <div class="container px-5">
         <a class="navbar-brand" href="{% url 'Inicio' %}">Inicio</a>
         <a class="navbar-brand" href="{% url 'ListaLibrosCards' 0 %}">Libros</a>
-        <a class="navbar-brand" href="{% url 'ListaLectores' %}">Lectores</a>
+        {% if user.is_staff  %}
+            <a class="navbar-brand" href="{% url 'ListaLectores' %}">Lectores</a>
+        {% endif  %}
         <a class="navbar-brand" href="{% url 'ListaEventos' %}">Eventos</a>
-        {% if user.is_authenticated %} 
+        {% if user.is_staff  %}
             <a class="navbar-brand" href="{% url 'ListaLibros' %}">Mis Libros</a>
+            <a class="navbar-brand" href="{% url 'ListaReservas' %}">Reservas</a>
         {% endif %}
+        <a class="navbar-brand" href="{% url 'SobreMi' %}">Sobre mi</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ms-auto">
-                {% if user.is_authenticated %}                 
-                    <p style="color:white;"> Bienvenido {{user.username}} </p>
+                {% if user.is_authenticated %}     
+                    <div class="container">
+                        <li class="nav-item">
+                            <span class="text-light"> Bienvenida/o {{user.first_name}}</span>
+                        </li>
+                    </div>            
                     <a class="btn btn-primary" href="{% url 'Logout' %}">Logout</a>
                     <a class="btn btn-light" href="{% url 'EditarPerfil' %}">Editar</a>
                 {% else %}

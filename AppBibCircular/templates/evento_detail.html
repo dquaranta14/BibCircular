@@ -1,9 +1,13 @@
 {% extends 'padre.html' %}
 
 {% block contenidoQueCambia %}
-    
-    <h1>{{evento.nombre}}</h1>
-    <h3>Dia: {{evento.fecha}} Horario: </h3>
-    <h3>Detalle: {{evento.descripcion}}</h3>
-    
+    <div class="container">
+        <h3>Datos del Evento</h3>
+        <br>
+        <p style="color:chocolate"><strong>{{evento.nombre}}</strong></p>
+        <p>Dia: {{evento.fecha}}  Horario: {{evento.horario}}</p>
+        <p>Lugar: {{evento.Lugar}}</p>
+        <br>
+        <p>Detalle: {{evento.descripcion}}</p>
+    </div>
 {% endblock contenidoQueCambia %}

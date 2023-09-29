@@ -14,6 +14,8 @@ urlpatterns = [
     path('elimina-libro/<pk>', LibroDelete.as_view(), name="EliminaLibros"),
     path('comentario-libro/<int:id>', nuevo_comentario, name="ComentarioLibros"),
     path('reserva-libro/<int:id>', reserva_libro, name="ReservaLibros"),
+    #path('reserva-confirmar/<int:id>', reserva_confirmar, name="ConfirmarReserva"),
+    path('lista-reservas/', ReservaList.as_view(), name="ListaReservas"),
     path('lista-lectores/', LectorList.as_view(), name="ListaLectores"),
     path('detalle-lector/<pk>', LectorDetail.as_view(), name="DetalleLectores"),
     path('crea-lector/', crea_lector, name="CreaLectores"),
@@ -32,4 +34,6 @@ urlpatterns = [
     path('registrar/', register, name="Registrar"),
     path('logout/', LogoutView.as_view(template_name="inicio.html"), name="Logout"),
     path('editar-perfil/', editar_perfil, name="EditarPerfil"),
+    path('cambio-password/', CambioPassword.as_view(), name="CambioPassword"),
+    path('sobremi/', sobremi, name="SobreMi"),
 ]

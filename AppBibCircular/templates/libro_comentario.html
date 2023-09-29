@@ -1,14 +1,15 @@
 {% extends 'padre.html' %}
 
 {% block contenidoQueCambia %}
-    
-    <form action="{% url 'ComentarioLibros' id %}" method="post">{% csrf_token %}
+    <div class="container">
+        <form action="{% url 'ComentarioLibros' id %}" method="post">{% csrf_token %}
 
-        <h4>{{nombre}}</h4>
+            <h4>Libro: {{nombre}}</h4>
 
-        {{miFormulario.as_p}}
-        
-        <button type="submit">Enviar</button>
-    </form>
+            {{miFormulario.as_p}}
+            
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+    </div>
 
 {% endblock contenidoQueCambia %}
