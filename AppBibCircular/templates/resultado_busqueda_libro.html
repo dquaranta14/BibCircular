@@ -7,7 +7,7 @@
         {%if libros %}
             {%for libro in libros %}
                 <li>
-                    <a href="{% url 'DetalleLibros' libro.id %}" >{{libro.nombre}} - {{libro.autor}} - {{libro.categoria}}</a>
+                    <a href="{% url 'DetalleLibros' libro.id %}" class="text-decoration-none" >{{libro.nombre}} - {{libro.autor}} - {{libro.categoria}}</a>
                 </li>
             {% endfor %}
         {% else %}
